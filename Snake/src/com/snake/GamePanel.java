@@ -38,12 +38,10 @@ public class GamePanel extends JPanel implements ActionListener {
      * As well as sets up the game
      */
     GamePanel(String colorChoice, boolean gridChoice, boolean wallsOn){
-        System.out.println("Test 1");
         random = new Random();
         setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         setBackground(Color.black);
         setFocusable(true);
-        addKeyListener(new MyKeyAdapter());
         startGame();
         this.colorChoice = colorChoice;
         this.gridChoice = gridChoice;
@@ -69,7 +67,6 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void startGame(){
-        System.out.println("test 2");
         newApple();
         running = true;
         timer = new Timer(TIMER_DELAY, this);
@@ -195,6 +192,8 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void move(){
+        keyBindingsMovement();
+
         /**
          * This loop shift the body parts of the snake around
          */
@@ -257,16 +256,16 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void noWallCollisions(){
-        if(x[0] == 0){
-            x[0] = SCREEN_WIDTH;
+        if(x[0] == 0 - UNIT_SIZE){
+            x[0] = SCREEN_WIDTH - UNIT_SIZE;
         }
 
         if(x[0] == SCREEN_WIDTH){
             x[0] = 0;
         }
 
-        if(y[0] == 0){
-            y[0] = SCREEN_HEIGHT;
+        if(y[0] == 0 - UNIT_SIZE){
+            y[0] = SCREEN_HEIGHT - UNIT_SIZE;
         }
 
         if(y[0] == SCREEN_HEIGHT){
@@ -312,42 +311,107 @@ public class GamePanel extends JPanel implements ActionListener {
                 graphics.getFont().getSize());
     }
 
-    private class MyKeyAdapter extends KeyAdapter{
-        @Override
-        /**
-         * Both WASD and the arrow keys will be viable control
-         * options
-         * The option to turn 180 degrees is also removed,
-         * as that would cause an instant game over
-         */
-        public void keyPressed(KeyEvent e) {
-            switch(e.getKeyCode()){
-                case KeyEvent.VK_LEFT, KeyEvent.VK_A:
-                    if(direction != 'R'){
-                        direction = 'L';
-                    }
-                    break;
 
-                case KeyEvent.VK_RIGHT, KeyEvent.VK_D:
-                    System.out.println("test 3");
-                    if(direction != 'L'){
-                        direction = 'R';
-                    }
-                    break;
 
-                case KeyEvent.VK_DOWN, KeyEvent.VK_S:
-                    System.out.println("test 3");
-                    if(direction != 'U'){
-                        direction = 'D';
-                    }
-                    break;
+    /**
+     * Both WASD and the arrow keys will be viable control
+     * options
+     * The option to turn 180 degrees is also removed,
+     * as that would cause an instant game over
+     */
+    private void keyBindingsMovement(){
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed UP"), "pressedUPAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed W"), "pressedWAction");
 
-                case KeyEvent.VK_UP, KeyEvent.VK_W:
-                    if(direction != 'D'){
-                        direction = 'U';
-                    }
+        getActionMap().put("pressedUPAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'D') {
+                    direction = 'U';
+                }
             }
-        }
+        });
+
+        getActionMap().put("pressedWAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'D') {
+                    direction = 'U';
+                }
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed DOWN"), "pressedDOWNAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed S"), "pressedSAction");
+
+        getActionMap().put("pressedDOWNAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'U') {
+                    direction = 'D';
+                }
+            }
+        });
+
+        getActionMap().put("pressedSAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'U') {
+                    direction = 'D';
+                }
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed LEFT"), "pressedLEFTAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed A"), "pressedAAction");
+
+        getActionMap().put("pressedLEFTAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'R') {
+                    direction = 'L';
+                }
+            }
+        });
+
+        getActionMap().put("pressedAAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'R') {
+                    direction = 'L';
+                }
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed RIGHT"), "pressedRIGHTAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed D"), "pressedDAction");
+
+        getActionMap().put("pressedRIGHTAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'L') {
+                    direction = 'R';
+                }
+            }
+        });
+
+        getActionMap().put("pressedDAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(direction != 'L') {
+                    direction = 'R';
+                }
+            }
+        });
+
     }
 
 }
